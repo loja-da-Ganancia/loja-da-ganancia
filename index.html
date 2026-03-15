@@ -2,114 +2,189 @@
 <html lang="pt-br">
 
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Pesquisar Cartas</title>
-<link rel="stylesheet" href="style.css">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family: Arial, Helvetica, sans-serif;
+background:#f2f2f2;
+}
+
+/* menu */
+
+.navbar-brand img{
+height:45px;
+}
+
+/* barra pesquisa */
+
+.barra-pesquisa{
+background:white;
+padding:20px;
+box-shadow:0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* filtro */
+
+.filtro{
+background:white;
+padding:20px;
+border-radius:6px;
+}
+
+/* cartas */
+
+.card{
+transition:0.2s;
+border:none;
+}
+
+.card:hover{
+transform:scale(1.05);
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+.card img{
+height:300px;
+object-fit:cover;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<header class="menu">
+<!-- MENU -->
 
-<img class="logo" src="imagens/logo.png">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
 
-<nav>
-<a href="index.html">Pesquisar Cartas</a>
-<a href="criar-deck.html">Criação de Deck</a>
-<a href="#">Visualizar Decks</a>
-<a href="#">Buscar Lojas</a>
-<a href="#">Favoritos</a>
-<a href="conta.html">Conta</a>
-</nav>
+<a class="navbar-brand" href="#">
+<img src="imagens/logo.png">
+</a>
 
-</header>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+<span class="navbar-toggler-icon"></span>
+</button>
 
+<div class="collapse navbar-collapse" id="menu">
 
-<div class="barra-pesquisa">
-<input type="text" placeholder="Pesquisar carta...">
+<div class="navbar-nav ms-auto">
+
+<a class="nav-link" href="index.html">Pesquisar Cartas</a>
+<a class="nav-link" href="criar-deck.html">Criação de Deck</a>
+<a class="nav-link" href="#">Visualizar Decks</a>
+<a class="nav-link" href="#">Buscar Lojas</a>
+<a class="nav-link" href="#">Favoritos</a>
+<a class="nav-link" href="conta.html">Conta</a>
+
 </div>
 
+</div>
+
+</nav>
+
+
+<!-- BARRA PESQUISA -->
+
+<div class="barra-pesquisa">
 
 <div class="container">
 
-<aside class="filtro">
+<div class="input-group input-group-lg">
 
-<h3>Tipo de Carta</h3>
+<input 
+type="text" 
+id="campoPesquisa"
+class="form-control"
+placeholder="Pesquisar carta..."
+onkeyup="pesquisarCarta()">
 
-<label><input type="checkbox"> Monstro</label>
-<label><input type="checkbox"> Magia</label>
-<label><input type="checkbox"> Armadilha</label>
+<button class="btn btn-dark" onclick="pesquisarCarta()">
+Pesquisar
+</button>
 
-<h3>Tipo de Monstro</h3>
+</div>
 
-<label><input type="checkbox"> Dragão</label>
-<label><input type="checkbox"> Guerreiro</label>
-<label><input type="checkbox"> Demônio</label>
-<label><input type="checkbox"> Mago</label>
-<label><input type="checkbox"> Máquina</label>
-<label><input type="checkbox"> Zumbi</label>
-<label><input type="checkbox"> Besta</label>
-<label><input type="checkbox"> Fada</label>
-<label><input type="checkbox"> Dinossauro</label>
-<label><input type="checkbox"> Inseto</label>
-<label><input type="checkbox"> Planta</label>
+</div>
 
-<h3>Tipo Especial</h3>
+</div>
 
-<label><input type="checkbox"> Fusion</label>
-<label><input type="checkbox"> Synchro</label>
-<label><input type="checkbox"> Xyz</label>
-<label><input type="checkbox"> Link</label>
-<label><input type="checkbox"> Ritual</label>
+
+<!-- CONTEUDO -->
+
+<div class="container mt-4">
+
+<div class="row g-4">
+
+<!-- FILTRO -->
+
+<aside class="col-lg-3">
+
+<div class="filtro">
+
+<h5>Tipo de Carta</h5>
+
+<div class="form-check">
+<input class="form-check-input" type="checkbox">
+<label class="form-check-label">Monstro</label>
+</div>
+
+<div class="form-check">
+<input class="form-check-input" type="checkbox">
+<label class="form-check-label">Magia</label>
+</div>
+
+<div class="form-check">
+<input class="form-check-input" type="checkbox">
+<label class="form-check-label">Armadilha</label>
+</div>
+
+</div>
 
 </aside>
 
 
-<main class="cartas">
+<!-- CARTAS -->
 
-<div class="carta">
-<img src="imagens/pote-ganancia.png">
-<p>Pot of Greed</p>
+<main class="col-lg-9">
+
+<div class="row g-4" id="listaCartas">
+
+<!-- CARTAS GERADAS PELO JAVASCRIPT -->
+
 </div>
 
-<div class="carta">
-<img src="imagens/pote-ganancia.png">
-<p>Pot of Greed</p>
-</div>
 
-<div class="carta">
-<img src="imagens/pote-ganancia.png">
-<p>Pot of Greed</p>
-</div>
+<!-- PAGINAÇÃO -->
 
-<div class="carta">
-<img src="imagens/pote-ganancia.png">
-<p>Pot of Greed</p>
-</div>
+<nav class="mt-4">
 
-<div class="carta">
-<img src="imagens/pote-ganancia.png">
-<p>Pot of Greed</p>
-</div>
+<ul class="pagination justify-content-center" id="paginacao">
 
-<div class="carta">
-<img src="imagens/pote-ganancia.png">
-<p>Pot of Greed</p>
-</div>
+</ul>
 
-<div class="carta">
-<img src="imagens/pote-ganancia.png">
-<p>Pot of Greed</p>
-</div>
-
-<div class="carta">
-<img src="imagens/pote-ganancia.png">
-<p>Pot of Greed</p>
-</div>
+</nav>
 
 </main>
 
 </div>
 
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="js/script.js"></script>
+
 </body>
+
 </html>
