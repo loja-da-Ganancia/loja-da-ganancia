@@ -1,60 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Um site de compra de cartas e decks de Yu Gi Oh!">
-
-    <title>Pesquisar Cartas</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <title>Perfil</title>
+    
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f2f2f2;
-        }
-
         /* menu */
         .navbar-brand img {
             height: 45px;
         }
-
-        /* barra pesquisa */
-        .barra-pesquisa {
-            background: white;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        /* filtro */
-        .filtro {
-            background: white;
-            padding: 20px;
-            border-radius: 6px;
-        }
-
-        /* cartas */
-        .card {
-            transition: 0.2s;
-            border: none;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .card img {
-            height: 300px;
-            object-fit: cover;
-        }
+        
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <body>
 
+    
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
         <a class="navbar-brand" href="#">
             <img src="imagens/logo.png" alt="Logo">
@@ -74,13 +39,48 @@
             </div>
         </div>
     </nav>
+    
 
+    <div class="banner-perfil">
+        <img src="imagens/pote-ganancia.png" alt="Banner Pote da Ganância">
+    </div>
 
-    <main>
-        <h1>Greed For Life</h1>
-    </main>
+    <div class="perfil">
+        <img src="imagens/perfil.png" class="foto-perfil" alt="Foto de Perfil">
+        <h2>Lucas Rosa</h2>
+        <p class="bio">
+            Jogo Yu-Gi-Oh desde de 2015 e amo a carta pote da ganancia
+        </p>
+    </div>
 
+    <div class="favorita">
+        <h2>Carta Favorita</h2>
+        <div class="carta-favorita">
+            <img src="imagens/pote-ganancia.png" alt="Pot of Greed">
+            <p>Pot of Greed</p>
+        </div>
+    </div>
+
+    <div class="perfil-decks">
+        <h2>Meus Decks</h2>
+
+        <div class="deck-card">
+            <h3>Deck pote da ganancia01</h3>
+            <p>40 cartas</p>
+        </div>
+
+        <div class="deck-card">
+            <h3>Deck pote da ganancia02</h3>
+            <p>40 cartas</p>
+        </div>
+
+        <div class="deck-card">
+            <h3>Deck pote da ganancia03</h3>
+            <p>42 cartas</p>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/script.js"></script>
 </body>
+
 </html>

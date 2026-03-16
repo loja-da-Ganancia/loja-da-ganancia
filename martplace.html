@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Um site de compra de cartas e decks de Yu Gi Oh!">
-
-    <title>Pesquisar Cartas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usado para fazer o Marketplace</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -52,9 +50,7 @@
         }
     </style>
 </head>
-
 <body>
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
         <a class="navbar-brand" href="#">
             <img src="imagens/logo.png" alt="Logo">
@@ -75,10 +71,58 @@
         </div>
     </nav>
 
+    <div class="barra-pesquisa">
+        <div class="container">
+            <div class="input-group input-group-lg">
+                <input 
+                    type="text" 
+                    id="campoPesquisa"
+                    class="form-control"
+                    placeholder="Pesquisar carta..."
+                    onkeyup="pesquisarCarta()">
+                <button class="btn btn-dark" onclick="pesquisarCarta()">
+                    Pesquisar
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <main>
-        <h1>Greed For Life</h1>
-    </main>
+    <div class="container mt-4">
+        <div class="row g-4">
+
+            <aside class="col-lg-3">
+                <div class="filtro">
+                    <h5>Tipo de Carta</h5>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label">Monstro</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label">Magia</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label">Armadilha</label>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="col-lg-9">
+                <div class="row g-4" id="listaCartas">
+                    </div>
+
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center" id="paginacao">
+                    </ul>
+                </nav>
+            </main>
+
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/script.js"></script>

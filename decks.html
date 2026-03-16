@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Criar Deck</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* menu */
+        .navbar-brand img {
+            height: 45px;
+        }
+
+        .deck-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .deck-esquerda {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .deck-card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .deck-area {
+            background: #f8f9fa;
+            min-height: 120px;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .deck-botoes button {
+            margin-top: 10px;
+            margin-right: 5px;
+        }
+
+        .deck-direita {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .cartas {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .carta {
+            background: white;
+            padding: 5px;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .carta img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .carta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .info-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+        <a class="navbar-brand" href="#">
+            <img src="imagens/logo.png" alt="Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">Home</a>
+                <a class="nav-link" href="martplace.html">Marketplace</a>
+                <a class="nav-link" href="decks.html">Decks</a>
+                <a class="nav-link" href="#">Comunidade</a>
+                <a class="nav-link" href="#">Favoritos</a>
+                <a class="nav-link" href="contas.html">Conta</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="deck-container">
+
+        <div class="deck-esquerda">
+
+            <div class="deck-card" data-deck="1">
+                <h5>Deck 1</h5>
+                <div class="deck-area"></div>
+                <div class="deck-botoes">
+                    <button class="btn btn-sm btn-primary">Visualizar</button>
+                    <button class="btn btn-sm btn-secondary">Editar</button>
+                </div>
+            </div>
+
+            <div class="deck-card" data-deck="2">
+                <h5>Deck 2</h5>
+                <div class="deck-area"></div>
+                <div class="deck-botoes">
+                    <button class="btn btn-sm btn-primary">Visualizar</button>
+                    <button class="btn btn-sm btn-secondary">Editar</button>
+                </div>
+            </div>
+
+            <div class="deck-card" data-deck="3">
+                <h5>Deck 3</h5>
+                <div class="deck-area"></div>
+                <div class="deck-botoes">
+                    <button class="btn btn-sm btn-primary">Visualizar</button>
+                    <button class="btn btn-sm btn-secondary">Editar</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="deck-direita">
+            <h5>Cartas</h5>
+            <div class="cartas" id="listaCartas"></div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">Informações da Carta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/deck.js"></script>
+
+</body>
+
+</html>
