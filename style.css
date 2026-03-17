@@ -321,23 +321,6 @@ cursor:pointer;
 background:#444;
 }
 
-.banner-home img 
-{
-    position: relative;
-    width: 100%;
-    height: auto;
-            
-}
-
-.logo-banner {
-    position: absolute;
-    width: 100%;
-    height: auto;
-    filter: brightness(0.2);
-
-}
-
-
 
 /* talvez possa botar o estilo da imagem brand da barra de navegação aqui...
  .navbar-brand img 
