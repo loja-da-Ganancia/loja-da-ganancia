@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidade - Yu-Gi-Oh!</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Estilo para as imagens das cartas no feed (Tamanho aumentado) */
+        .card-small-img {
+            width: 60px; 
+            object-fit: cover; 
+        }
+
+        /* Tamanho da logo no menu principal */
+        .navbar-brand img {
+            height: 45px;
+        }
+
+        /* Estilo personalizado para os botões de Adicionar Deck e Amigo */
+        .btn-comunidade {
+            background-color: #212529;
+            color: #adb5bd; 
+            border: 1px solid #00d2ff; 
+            transition: 0.2s;
+        }
+
+        .btn-comunidade:hover {
+            color: #ffffff;
+            background-color: #343a40; 
+        }
+        
+        /* Inverte a cor dos ícones SVG para ficarem brancos no fundo escuro */
+        .btn-comunidade img {
+            filter: invert(80%);
+        }
+
+        /* Customização das abas de navegação (Feed / Pesquisar) para o tema escuro */
+        .abas-escuras .nav-link {
+            color: #adb5bd; 
+        }
+
+        .abas-escuras .nav-link:hover {
+            color: #ffffff; 
+        }
+
+        .abas-escuras .nav-pills .nav-link.active,
+        .abas-escuras .nav-pills .show > .nav-link {
+            background-color: #212529; 
+            color: #ffffff;
+            border: 1px solid #00d2ff; 
+        }
+
+        /* Reduz o tamanho geral dos blocos de postagem em 15% para caber melhor na tela */
+        .reduced-size-card {
+            transform: scale(0.85); 
+            transform-origin: top left; 
+            margin-bottom: 2rem; 
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+        <a class="navbar-brand" href="index.html">
+            <img src="imagens/logo.png" alt="Logo">
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="home.html">Home</a>
+                <a class="nav-link" href="martplace.html">Marketplace</a>
+                <a class="nav-link" href="decks.html">Decks</a>
+                <a class="nav-link" href="comunidade.html">Comunidade</a>
+                <a class="nav-link" href="#">Favoritos</a>
+                <a class="nav-link" href="contas.html">Conta</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="d-flex justify-content-end gap-3">
+            
+            <button class="btn btn-comunidade d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalPostarDeck">
+                <img src="imagens/plus.svg" width="20" height="20" alt="Símbolo de mais">
+                Adicionar Deck
+            </button>
+
+            <button class="btn btn-comunidade d-flex align-items-center gap-2">
+                <img src="imagens/person-fill-add.svg" width="20" height="20" alt="Adicionar pessoa">
+                Adicionar Amigo
+            </button>
+
+        </div>
+    </div>
+
+    <div class="container mt-5 d-flex flex-column justify-content-end abas-escuras">
+    
+        <ul class="nav nav-pills mb-3" id="comunidade-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="feed-tab" data-bs-toggle="pill" data-bs-target="#feed" type="button" role="tab">Feed</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pesquisar-tab" data-bs-toggle="pill" data-bs-target="#pesquisar" type="button" role="tab">Pesquisar Pessoas</button>
+            </li>
+        </ul>
+
+        <div class="tab-content w-100" id="comunidade-conteudo">
+        
+            <div class="tab-pane fade show active" id="feed" role="tabpanel">
+                <div class="p-4 bg-dark text-secondary rounded border border-secondary text-end">
+                    
+                    <div class="card bg-dark text-secondary border-secondary mb-3 text-start reduced-size-card">
+                        
+                        <div class="card-header border-secondary d-flex align-items-center gap-2">
+                            <img src="imagens/perfil.png" alt="Foto de Michael" class="rounded-circle" width="35" height="35" style="object-fit: cover;">
+                            <div>
+                                <h6 class="mb-0 text-light" style="font-size: 0.9rem;">Michael Patrick</h6>
+                                <small class="text-light" style="font-size: 0.75rem;">Há 2 horas</small>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <p class="card-text text-light" style="font-size: 0.85rem;">Dá uma olhada no meu novo deck focado em puxar cartas! Fechei as 40 cartas pro campeonato.</p>
+                            
+                            <div class="row row-cols-2 row-cols-md-4 g-2 mt-2">
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                                
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer border-secondary d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-info" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">Curtir</button>
+                            <button class="btn btn-sm btn-outline-secondary text-light" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">Comentar</button>
+                        </div>
+                    </div>
+
+                    <div class="card bg-dark text-secondary border-secondary mb-3 text-start reduced-size-card">
+                        
+                        <div class="card-header border-secondary d-flex align-items-center gap-2">
+                            <img src="imagens/perfil.png" alt="Foto de Luke" class="rounded-circle" width="35" height="35" style="object-fit: cover;">
+                            <div>
+                                <h6 class="mb-0 text-light" style="font-size: 0.9rem;">Luke Patrick</h6>
+                                <small class="text-light" style="font-size: 0.75rem;">Há 5 horas</small>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <p class="card-text text-light" style="font-size: 0.85rem;">Confiram o meu deck de 40 cartas principal para a temporada! #DuelMonsters</p>
+                            
+                            <div class="row row-cols-2 row-cols-md-4 g-2 mt-2">
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pot_of_extravagance.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Extravagance</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/por_of_desires.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Pot of Desires</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/spirit_of_the_pot_of_greed.jpg" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Spirit of the Pot of Greed</span></div>
+                                <div class="col d-flex align-items-center gap-2"><img src="imagens/pote-ganancia.png" class="card-small-img rounded border border-secondary" alt="Carta"><span class="text-light" style="font-size: 0.7rem; line-height: 1;">Jar of Greed</span></div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer border-secondary d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-info" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">Curtir</button>
+                            <button class="btn btn-sm btn-outline-secondary text-light" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">Comentar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-pane fade" id="pesquisar" role="tabpanel">
+                <div class="p-4 bg-dark text-secondary rounded border border-secondary text-end">
+                    <h5>Encontrar Duelistas</h5>
+                    <p>Barra de pesquisa de jogadores.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Adicionar deck -->
+    <div class="modal fade" id="modalPostarDeck" tabindex="-1" aria-labelledby="modalPostarDeckLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-secondary border-secondary">
+                
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title text-light" id="modalPostarDeckLabel">Postar Novo Deck no Feed</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                
+                <div class="modal-body text-start">
+                    <form>
+                        <div class="mb-3">
+                            <label for="nomeUsuario" class="form-label text-light">Seu Nome</label>
+                            <input type="text" class="form-control bg-dark text-light border-secondary" id="nomeUsuario" value="Lucas Rosa">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="comentarioDeck" class="form-label text-light">Comentário sobre a estratégia</label>
+                            <textarea class="form-control bg-dark text-light border-secondary" id="comentarioDeck" rows="3" placeholder="O que faz esse deck ser bom? Manda aquela estratégia com o Pote da Ganância..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-light">Composição do Deck (40 Cartas)</label>
+                            <div class="p-3 border border-secondary rounded bg-dark">
+                                <p class="text-muted small mb-3">Selecione o balanço dos tipos de cartas para o seu deck:</p>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label text-secondary small">Monstros</label>
+                                        <select class="form-select bg-dark text-light border-secondary">
+                                            <option selected>20 Cartas (Foco Padrão)</option>
+                                            <option value="1">25 Cartas (Agressivo)</option>
+                                            <option value="2">15 Cartas (Controle)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label text-secondary small">Magias</label>
+                                        <select class="form-select bg-dark text-light border-secondary">
+                                            <option selected>10 Cartas (Suporte/Puxar)</option>
+                                            <option value="1">15 Cartas (Foco em Magia)</option>
+                                            <option value="2">5 Cartas</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label text-secondary small">Armadilhas</label>
+                                        <select class="form-select bg-dark text-light border-secondary">
+                                            <option selected>10 Cartas (Defesa)</option>
+                                            <option value="1">15 Cartas (Traptrix/Controle)</option>
+                                            <option value="2">0 Cartas (Combo Rápido)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 text-center">
+                                    <span class="badge bg-success p-2 px-3">Status: Deck Válido (40 Cartas Selecionadas)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-secondary text-muted" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-info fw-bold">Publicar Deck</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-center text-white py-3">
+        <p>&copy; 2026 Greed Store™. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+</html>

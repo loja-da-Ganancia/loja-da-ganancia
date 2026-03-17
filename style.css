@@ -4,6 +4,23 @@ body{
     background:#f2f2f2;
 }
 
+/* Estilo dos botões da comunidade */
+        .btn-comunidade {
+            background-color: #212529; /* Mesmo tom escuro do menu */
+            color: #adb5bd; /* Cor da letra parecida com os links do menu */
+            border: 1px solid #00d2ff; /* Linha azul ciano para combinar com o topo da tela */
+            transition: 0.2s;
+        }
+
+        .btn-comunidade:hover {
+            color: #ffffff;
+            background-color: #343a40; /* Fica um pouco mais claro ao passar o mouse */
+        }
+        
+        /* Caso os SVGs originais sejam pretos, isso inverte a cor deles para branco/cinza claro para aparecerem no fundo escuro */
+        .btn-comunidade img {
+            filter: invert(80%);
+        }
 
 /* MENU SUPERIOR */
 
