@@ -21,8 +21,9 @@
             text-align: center;
             color: #ffffff;
             background-color: rgba(0, 0, 0, 0.5);
-            height: 40%;
-            padding: 10px;
+            height: 250px;
+            width: fit-content;
+            
         }
 
         .textoIntroducão {
@@ -35,13 +36,34 @@
             color: #ffffff;
             background-color: rgba(0, 0, 0, 0.5);
             padding: 10px;
-            width:160%;
+            height:fit-content;
+            width:fit-content;
+            padding: 10px;
         }
         .gradienteVerdeRoxo {
             background: linear-gradient(45deg, #00ff00, #800080);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             -webkit-text-stroke: #ffffff 2px;
+        }
+        #containerCartaDestaque {
+            position: absolute;
+            left: -100px;
+            top: 700px;
+            width: fit-content;
+            height: fit-content;
+
+        }
+        #cartaDestaque{
+            width: fit-content;
+            height: fit-content;
+            margin: 1em;
+            
+            font-size: 20px;
+
+        }
+        .card-title {
+            font-size: 40px;
         }
 
     </style>
@@ -71,8 +93,8 @@
     </nav>
     
     <section class="banner-home">
-        <img src="imagens/logo.png" alt="Banner Home">
-        <div class = "textoBanner">Bem-vindo à 
+        <img src="imagens/logo.png" alt="Banner Home" class="logo-banner">
+        <div class = "textoBanner">Bem-vindo à<br>
             <span class = gradienteVerdeRoxo style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">
                 Greed Store!
             </span>
@@ -81,9 +103,21 @@
             ● montar decks🤚🃏🐉🀄 <br>
             ● e se conectar com outros jogadores de Yu-Gi-Oh!🌎
             </div>
+            <div class="container" id="containerCartaDestaque">
+                <h2 class="mb-4">Carta em Destaque</h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card" id="cartaDestaque">
+                            <img src="imagens/pote-ganancia.png" class="card-img-top" alt="Pote da ganância">
+                            <div class="card-body">
+                                <h5 class="card-title">Pote da ganância</h5>
+                                <p class="card-text">Compre 2 cartas do seu deck.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-
     </section>
     <footer class="bg-dark text-center text-white py-3">
         <p>&copy; 2026 Greed Store™. Todos os direitos reservados.</p>
