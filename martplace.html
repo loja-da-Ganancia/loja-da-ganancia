@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +24,7 @@
         .barra-pesquisa {
             background: white;
             padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
         /* filtro */
@@ -41,7 +42,7 @@
 
         .card:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .card img {
@@ -50,6 +51,7 @@
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
         <a class="navbar-brand" href="#">
@@ -64,8 +66,8 @@
                 <a class="nav-link" href="home.html">Home</a>
                 <a class="nav-link" href="martplace.html">Marketplace</a>
                 <a class="nav-link" href="decks.html">Decks</a>
-                <a class="nav-link" href="#">Comunidade</a>
-                <a class="nav-link" href="#">Favoritos</a>
+                <a class="nav-link" href="comunidade.html">Comunidade</a>
+                <a class="nav-link" href="favoritos.html">Favoritos</a>
                 <a class="nav-link" href="contas.html">Conta</a>
             </div>
         </div>
@@ -74,11 +76,7 @@
     <div class="barra-pesquisa">
         <div class="container">
             <div class="input-group input-group-lg">
-                <input 
-                    type="text" 
-                    id="campoPesquisa"
-                    class="form-control"
-                    placeholder="Pesquisar carta..."
+                <input type="text" id="campoPesquisa" class="form-control" placeholder="Pesquisar carta..."
                     onkeyup="pesquisarCarta()">
                 <button class="btn btn-dark" onclick="pesquisarCarta()">
                     Pesquisar
@@ -113,7 +111,7 @@
 
             <main class="col-lg-9">
                 <div class="row g-4" id="listaCartas">
-                    </div>
+                </div>
 
                 <nav class="mt-4">
                     <ul class="pagination justify-content-center" id="paginacao">
@@ -126,5 +124,23 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/script.js"></script>
+    <div id="mensagem" style="
+position: fixed;
+top: 20px;
+right: 20px;
+background: #28a745;
+color: white;
+padding: 10px 20px;
+border-radius: 5px;
+display: none;
+z-index: 999;
+">
+        Adicionado aos favoritos!
+    </div>
+
+
+
+
 </body>
+
 </html>

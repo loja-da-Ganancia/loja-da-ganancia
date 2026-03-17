@@ -75,6 +75,13 @@ container.innerHTML += `
 <p class="card-text">${carta.nome}</p>
 <p class="card-text fw-bold text-success">R$ ${carta.preco.toFixed(2)}</p>
 
+<button class="btn btn-warning mt-2"
+onclick="adicionarFavorito('${carta.nome}', '${carta.img}', '${carta.preco}')">
+⭐ Favoritar
+</button>
+
+
+
 </div>
 
 </div>
@@ -193,3 +200,35 @@ carta.style.display = "none";
 
 mostrarCartas();
 criarPaginacao();
+
+function mostrarMensagem(texto) {
+    let msg = document.getElementById("mensagem");
+    msg.innerText = texto;
+    msg.style.display = "block";
+
+    setTimeout(() => {
+        msg.style.display = "none";
+    }, 2000);
+}
+
+function adicionarFavorito(nome, imagem, preco) {
+
+let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+
+let novaCarta = {
+    nome: nome,
+    imagem: imagem,
+    preco: preco
+};
+
+let existe = favoritos.some(carta => carta.nome === nome);
+
+if (!existe) {
+    favoritos.push(novaCarta);
+    localStorage.setItem("favoritos", JSON.stringify(favoritos));
+    mostrarMensagem("Adicionado aos favoritos!");
+} else {
+    mostrarMensagem("Essa carta já está nos favoritos!");
+}
+
+}
