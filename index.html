@@ -74,10 +74,10 @@
 
         /* LARGURA FIXA E SOMBRA NA CARTA */
         #cartaDestaque {
-            margin: 0 auto;
+            margin: 20px;
             width: 18rem; 
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            box-shadow: 4px 20px 10px rgba(0, 0, 0, 0.699);
         }
 
         /* TAMANHO DO TÍTULO CORRIGIDO PARA CABER NA CARTA */
@@ -91,6 +91,40 @@
             font-size: 16px;
         }
 
+        #caixaCarta {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+            width:auto;
+            height: fit-content;
+            margin: 20px;
+            padding-right: 20px;
+            padding-left: 20px;
+            border-radius: 15px;
+            
+            background: linear-gradient(45deg, #00ff0085, #800080);
+        }
+
+        .card-header {
+            justify-content: center;
+            width: 100%;
+            background:linear-gradient(to bottom,#ff0040e7, #ff000063, #ff000018);
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 20px;
+            padding: 5px 0;
+            z-index: 1; 
+            overflow: hidden;
+            
+        }
+
+        #caixaRedesSociais {
+            background: linear-gradient(45deg, #2600ff85, #800080);
+            padding: 20px;
+            border-radius: 10px;
+        }
 
     </style>
 </head>
@@ -134,9 +168,17 @@
             </div>
             
             <div class="container text-center" id="containerCartaDestaque">
-                <h2 class="mb-4 text-white text-center">Carta em Destaque</h2>
+                <h2 class="mb-4 text-white text-center" style="background: linear-gradient(to top left, #fffb00,#ffa600, #800080);
+                -webkit-background-clip:text;
+                -webkit-text-fill-color: transparent;
+                ">🌟Cartas em Destaque🌟</h2>
                 <div class="row justify-content-center">
-                    <div class="col-md-4 mb-4 d-flex justify-content-center">
+                    <div class="col-md-4 mb-4 d-flex justify-content-center"  id="caixaCarta">
+
+                        <div class="card-header">
+                            Mais vendida💰🔥🔥
+                        </div>
+                        
                         <div class="card mx-auto" id="cartaDestaque">
                             <img src="imagens/pote-ganancia.png" class="card-img-top" alt="Pote da ganância">
                             <div class="card-body">
@@ -145,7 +187,82 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-4 mb-4 d-flex justify-content-center" id="caixaCarta">
+
+                            <div class="card-header">
+                            Mais Rara em Venda💎✨✨
+                            </div>
+
+                        <div class="card mx-auto" id="cartaDestaque">
+                            <img src="imagens/pote-ganancia.png" class="card-img-top" alt="Pote da ganância">
+                            <div class="card-body">
+                                <h5 class="card-title">Pote da ganância</h5>
+                                <p class="card-text">Compre 2 cartas do seu deck.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4 d-flex justify-content-center" id="caixaCarta">
+
+                            <div class="card-header">
+                            Mais Visualizações👀🔎🔎
+                            </div>
+
+                        <div class="card mx-auto" id="cartaDestaque">
+
+                            <img src="imagens/pote-ganancia.png" class="card-img-top" alt="Pote da ganância">
+                            <div class="card-body">
+                                <h5 class="card-title">Pote da ganância</h5>
+                                <p class="card-text">Compre 2 cartas do seu deck.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </section>
+        <section class="container text-center mt-5">
+            <h2 class="mb-4 text-white text-center" style="background: linear-gradient(to top left, #fffb00,#ffa600, #800080);
+                -webkit-background-clip:text;
+                -webkit-text-fill-color: transparent;
+                ">🎉Novidades🎉</h2>
+            <p class="text-white mb-4" style="font-size: 18px;">Fique por dentro das últimas novidades do mundo de Yu-Gi-Oh! e da Greed Store.</p>
+            <div class="row justify-content-center">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="imagens/novidade1.jpg" class="card-img-top" alt="Novidade 1">
+                        <div class="card-body">
+                            <h5 class="card-title">Lançamento do novo set de cartas</h5>
+                            <p class="card-text">Confira as novas cartas do set XYZ, com habilidades incríveis e arte impressionante!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="imagens/novidade2.jpg" class="card-img-top" alt="Novidade 2">
+                        <div class="card-body">
+                            <h5 class="card-title">Evento de Duelo Online</h5>
+                            <p class="card-text">Participe do nosso evento de duelo online e concorra a prêmios exclusivos!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="imagens/novidade3.jpg" class="card-img-top" alt="Novidade 3">
+                        <div class="card-body">
+                            <h5 class="card-title">Promoção de Cartas Raras</h5>
+                            <p class="card-text">Aproveite nossa promoção especial de cartas raras, com descontos imperdíveis por tempo limitado!</p>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </section>
+        
+        <section class="container text-center mt-5" id="caixaRedesSociais">
+            <h2 class="text-white">Siga-nos em nossas redes sociais🤳📲🌎</h2>
+            <div class="d-flex justify-content-center mt-3">
+                <a href="#" class="btn btn-primary mx-2">Facebook</a>
+                <a href="#" class="btn btn-info mx-2">BlueSky</a>
+                <a href="#" class="btn btn-danger mx-2">Instagram</a>
+                <a href="#" class="btn btn-secondary mx-2">LinkedIn</a>
             </div>
         </section>
     </main>
