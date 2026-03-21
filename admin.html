@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Painel Administrativo | Greed Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar-brand img {
+            height: 45px;
+        }
+        .table-users th, .table-users td {
+            vertical-align: middle;
+        }
+        .role-badge {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+        <a class="navbar-brand" href="index.html">
+            <img src="imagens/logo_sem_fundo_greedstore.png" alt="Logo Greed Store">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+        <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="martplace.html">Marketplace</a>
+        <a class="nav-link" href="decks.html">Decks</a>
+        <a class="nav-link" href="comunidade.html">Comunidade</a>
+        <a class="nav-link" href="favoritos.html">Favoritos</a>
+        <!-- O link "Conta" foi removido – será inserido dinamicamente pelo auth.js -->
+        </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>👑 Painel do Administrador</h2>
+            <button class="btn btn-danger" id="logoutBtn">Sair</button>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Total de Usuários</div>
+                    <div class="card-body">
+                        <h5 class="card-title" id="totalUsuarios">0</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">Decks Criados</div>
+                    <div class="card-body">
+                        <h5 class="card-title" id="totalDecks">0</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-header">Total de Cartas nos Decks</div>
+                    <div class="card-body">
+                        <h5 class="card-title" id="totalCartas">0</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3>📋 Gerenciar Usuários</h3>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-users">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Papel</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- Preenchido via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-center text-white py-3 mt-5">
+        <p>&copy; 2026 Greed Store™. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Protege a página: só admin pode acessar
+        (function() {
+            if (!isLoggedIn()) {
+                window.location.href = 'contas.html';
+                return;
+            }
+            const user = getCurrentUser();
+            if (user.role !== 'admin') {
+                alert('Acesso negado. Você não é administrador.');
+                window.location.href = 'index.html';
+                return;
+            }
+        })();
+
+        // Funções auxiliares
+        function getUsers() {
+            const users = localStorage.getItem('greedstore_users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('greedstore_users', JSON.stringify(users));
+        }
+
+        function getDecks() {
+            const decks = localStorage.getItem('greedstore_decks');
+            return decks ? JSON.parse(decks) : [];
+        }
+
+        function atualizarEstatisticas() {
+            const users = getUsers();
+            const decks = getDecks();
+            const totalCartas = decks.reduce((acc, deck) => acc + deck.cartas.length, 0);
+            document.getElementById('totalUsuarios').innerText = users.length;
+            document.getElementById('totalDecks').innerText = decks.length;
+            document.getElementById('totalCartas').innerText = totalCartas;
+        }
+
+        function renderizarTabelaUsuarios() {
+            const users = getUsers();
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${escapeHtml(user.username)}</td>
+                    <td>
+                        <span class="badge ${user.role === 'admin' ? 'bg-danger' : 'bg-secondary'} role-badge">
+                            ${user.role === 'admin' ? 'Admin' : 'Usuário'}
+                        </span>
+                    </td>
+                    <td>
+                        ${user.username !== 'admin' ? `
+                            <button class="btn btn-sm btn-warning toggle-role" data-username="${user.username}">
+                                ${user.role === 'admin' ? 'Remover Admin' : 'Tornar Admin'}
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-user" data-username="${user.username}">
+                                Excluir
+                            </button>
+                        ` : '<span class="text-muted">Protegido</span>'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Eventos dos botões
+            document.querySelectorAll('.toggle-role').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const username = btn.dataset.username;
+                    let users = getUsers();
+                    const userIndex = users.findIndex(u => u.username === username);
+                    if (userIndex !== -1) {
+                        users[userIndex].role = users[userIndex].role === 'admin' ? 'user' : 'admin';
+                        saveUsers(users);
+                        renderizarTabelaUsuarios();
+                        atualizarEstatisticas();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.delete-user').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const username = btn.dataset.username;
+                    if (confirm(`Tem certeza que deseja excluir o usuário "${username}"?`)) {
+                        let users = getUsers();
+                        users = users.filter(u => u.username !== username);
+                        saveUsers(users);
+                        renderizarTabelaUsuarios();
+                        atualizarEstatisticas();
+                    }
+                });
+            });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Inicialização
+        atualizarEstatisticas();
+        renderizarTabelaUsuarios();
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+    </script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

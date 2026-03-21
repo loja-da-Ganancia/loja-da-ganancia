@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usado para fazer o Marketplace</title>
+    <title>Marketplace | Greed Store</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -15,29 +15,26 @@
             background: #f2f2f2;
         }
 
-        /* menu */
         .navbar-brand img {
             height: 45px;
         }
 
-        /* barra pesquisa */
         .barra-pesquisa {
             background: white;
             padding: 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
-        /* filtro */
         .filtro {
             background: white;
             padding: 20px;
             border-radius: 6px;
         }
 
-        /* cartas */
         .card {
             transition: 0.2s;
             border: none;
+            cursor: pointer;
         }
 
         .card:hover {
@@ -46,13 +43,21 @@
         }
 
         .card img {
-            height: 300px;
+            height: 250px;
             object-fit: cover;
+        }
+
+        /* Responsividade: mobile 1 coluna */
+        @media (max-width: 576px) {
+            .card img {
+                height: 320px;
+            }
         }
     </style>
 </head>
 
 <body>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
         <a class="navbar-brand" href="#">
             <img src="imagens/logo_sem_fundo_greedstore.png" alt="Logo">
@@ -68,7 +73,7 @@
                 <a class="nav-link" href="decks.html">Decks</a>
                 <a class="nav-link" href="comunidade.html">Comunidade</a>
                 <a class="nav-link" href="favoritos.html">Favoritos</a>
-                <a class="nav-link" href="contas.html">Conta</a>
+                <!-- Links de conta dinâmicos (auth.js) -->
             </div>
         </div>
     </nav>
@@ -122,8 +127,24 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/script.js"></script>
+    <!-- Modal de detalhes da carta (zoom) -->
+    <div class="modal fade" id="cardModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cardModalLabel">Detalhes da Carta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalCardBody">
+                    <!-- Conteúdo preenchido via JS -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="mensagem" style="
         position: fixed;
         top: 20px;
@@ -142,7 +163,9 @@
         <p>&copy; 2026 Greed Store™. Todos os direitos reservados.</p>
     </footer>
 
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
 </body>
 
 </html>
