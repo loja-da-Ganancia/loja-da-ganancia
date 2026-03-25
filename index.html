@@ -5,134 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Um site de compra de cartas e decks de Yu Gi Oh!">
 
-    <title>Home</title>
+    <title>Home | Greed Store</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+        /* Fundo unificado igual ao Marketplace */
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background: rgb(7, 2, 27);
+            background-color: #0d1117;
+            color: #c9d1d9;
         }
 
-        /* menu */
+        /* Menu */
         .navbar-brand img {
             height: 45px;
         }
 
-        /* banner e imagem de fundo */
         .banner-home {
             position: relative;
-            min-height: 100vh;
             padding-bottom: 50px;
-        }
-
-        .logo-banner {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .textoBanner {
-            margin: 50px auto 20px auto; 
-            font-size: 500%;
+            margin: 60px auto 20px auto; 
+            font-size: 4rem;
             text-align: center;
             color: #ffffff;
-            background-color: rgba(0, 0, 0, 0.5);
             width: fit-content;
             padding: 20px;
-            border-radius: 10px;
         }
 
-        .textoIntroducão {
+        .textoIntroducao {
             margin: 0 auto 50px auto;
-            font-size: 150%; 
-            text-align: left;
-            color: #ffffff;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 15px;
+            font-size: 1.3rem; 
+            text-align: center;
+            color: #c9d1d9;
+            padding: 10px 20px;
             width: fit-content;
-            border-radius: 10px;
+            line-height: 1.8;
         }
 
         .gradienteVerdeRoxo {
             background: linear-gradient(45deg, #00ff00, #800080);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            -webkit-text-stroke: #ffffff 2px;
+            -webkit-text-stroke: #ffffff 1px;
         }
 
-        #containerCartaDestaque {
-            position: relative;
-            width: 100%;
-        }
-
-        /* LARGURA FIXA E SOMBRA NA CARTA */
-        #cartaDestaque {
-            margin: 20px;
-            width: 18rem; 
-            border-radius: 8px;
-            box-shadow: 4px 20px 10px rgba(0, 0, 0, 0.699);
-        }
-
-        /* TAMANHO DO TÍTULO CORRIGIDO PARA CABER NA CARTA */
-        .card-title {
-            font-size: 24px; 
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        
-        .card-text {
-            font-size: 16px;
-        }
-
-        #caixaCarta {
+        /* Acesso Rápido */
+        .quick-action-card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            text-align: center;
             justify-content: center;
-            width:auto;
-            height: fit-content;
-            margin: 20px;
-            padding-right: 20px;
-            padding-left: 20px;
-            border-radius: 15px;
-            
-            background: linear-gradient(45deg, #00ff0085, #800080);
+            text-decoration: none;
+            color: #c9d1d9;
         }
 
-        .card-header {
-            justify-content: center;
-            width: 100%;
-            background:linear-gradient(to bottom,#ff0040e7, #ff000063, #ff000018);
+        .quick-action-card:hover {
+            transform: translateY(-10px);
+            border-color: #00d2ff;
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.15);
             color: #ffffff;
-            font-size: 18px;
+        }
+
+        .quick-action-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        /* Títulos de Seção Customizados */
+        .section-title {
+            background: linear-gradient(to top left, #fffb00, #ffa600, #800080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             font-weight: bold;
-            border-radius: 20px;
-            padding: 5px 0;
-            z-index: 1; 
-            overflow: hidden;
-            
+            font-size: 2.5rem;
         }
 
+        /* Redes Sociais unificadas com o visual do site */
         #caixaRedesSociais {
-            background: linear-gradient(45deg, #2600ff85, #800080);
-            padding: 20px;
-            border-radius: 10px;
+            background-color: #161b22;
+            padding: 40px 20px;
+            border-radius: 15px;
+            border: 1px solid #30363d;
         }
 
+        /* Responsividade do texto do banner */
+        @media (max-width: 768px) {
+            .textoBanner { font-size: 2.5rem; }
+            .textoIntroducao { font-size: 1.1rem; text-align: left;}
+        }
     </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-        <a class="navbar-brand" href="#">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 border-bottom border-secondary">
+        <a class="navbar-brand" href="index.html">
             <img src="imagens/logo_sem_fundo_greedstore.png" alt="Logo">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
@@ -141,19 +122,18 @@
 
         <div class="collapse navbar-collapse" id="menu">
             <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="index.html">Home</a>
-            <a class="nav-link" href="martplace.html">Marketplace</a>
-            <a class="nav-link" href="decks.html">Decks</a>
-            <a class="nav-link" href="comunidade.html">Comunidade</a>
-            <a class="nav-link" href="favoritos.html">Favoritos</a>
-            <!-- O link "Conta" foi removido – será inserido dinamicamente pelo auth.js -->
+                <a class="nav-link active" href="index.html">Home</a>
+                <a class="nav-link" href="marketplace.html">Marketplace</a>
+                <a class="nav-link" href="decks.html">Decks</a>
+                <a class="nav-link" href="comunidade.html">Comunidade</a>
+                <a class="nav-link" href="favoritos.html">Favoritos</a>
             </div>
         </div>
     </nav>
 
-
     <main>
         <section class="banner-home">
+
             <div class="textoBanner">
                 Bem-vindo à<br>
                 <span class="gradienteVerdeRoxo" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">
@@ -161,118 +141,61 @@
                 </span>
             </div>
 
-            <div class="textoIntroducão">
-                ● Aqui você pode comprar cartas.💸➔🃏 <br> 
-                ● montar decks🤚🃏🐉🀄 <br>
-                ● e se conectar com outros jogadores de Yu-Gi-Oh!🌎
+            <div class="textoIntroducao">
+                <strong>O seu portal definitivo para o Duelo:</strong><br><br>
+                💸 Compre e analise o preço das melhores cartas<br>
+                🤚 Monte estratégias e construa decks imbatíveis<br>
+                🌎 Conecte-se com duelistas de todo o mundo
             </div>
             
-            <div class="container text-center" id="containerCartaDestaque">
-                <h2 class="mb-4 text-white text-center" style="background: linear-gradient(to top left, #fffb00,#ffa600, #800080);
-                -webkit-background-clip:text;
-                -webkit-text-fill-color: transparent;
-                ">🌟Cartas em Destaque🌟</h2>
-                <div class="row justify-content-center">
-                    <div class="col-md-4 mb-4 d-flex justify-content-center"  id="caixaCarta">
-
-                        <div class="card-header">
-                            Mais vendida💰🔥🔥
-                        </div>
-                        
-                        <div class="card mx-auto" id="cartaDestaque">
-                            <img src="imagens/pote-ganancia.png" class="card-img-top" alt="Pote da ganância">
-                            <div class="card-body">
-                                <h5 class="card-title">Pote da ganância</h5>
-                                <p class="card-text">Compre 2 cartas do seu deck.</p>
-                            </div>
-                        </div>
+            <div class="container mt-4 mb-5">
+                <h2 class="mb-4 text-center section-title">O que você deseja fazer?</h2>
+                <div class="row justify-content-center g-4">
+                    
+                    <div class="col-md-4">
+                        <a href="marketplace.html" class="quick-action-card">
+                            <div class="quick-action-icon">🛒</div>
+                            <h4 class="fw-bold text-white">Explorar Marketplace</h4>
+                            <p class="mt-2 mb-0">Busque cartas, compare preços no TCGPlayer e adicione aos favoritos.</p>
+                        </a>
                     </div>
-                    <div class="col-md-4 mb-4 d-flex justify-content-center" id="caixaCarta">
 
-                            <div class="card-header">
-                            Mais Rara em Venda💎✨✨
-                            </div>
-
-                        <div class="card mx-auto" id="cartaDestaque">
-                            <img src="imagens/pote-ganancia.png" class="card-img-top" alt="Pote da ganância">
-                            <div class="card-body">
-                                <h5 class="card-title">Pote da ganância</h5>
-                                <p class="card-text">Compre 2 cartas do seu deck.</p>
-                            </div>
-                        </div>
+                    <div class="col-md-4">
+                        <a href="decks.html" class="quick-action-card">
+                            <div class="quick-action-icon">🎴</div>
+                            <h4 class="fw-bold text-white">Montar Novo Deck</h4>
+                            <p class="mt-2 mb-0">Crie estratégias, adicione cartas ao seu Trunk e prepare-se para o duelo.</p>
+                        </a>
                     </div>
-                    <div class="col-md-4 mb-4 d-flex justify-content-center" id="caixaCarta">
 
-                            <div class="card-header">
-                            Mais Visualizações👀🔎🔎
-                            </div>
-
-                        <div class="card mx-auto" id="cartaDestaque">
-
-                            <img src="imagens/pote-ganancia.png" class="card-img-top" alt="Pote da ganância">
-                            <div class="card-body">
-                                <h5 class="card-title">Pote da ganância</h5>
-                                <p class="card-text">Compre 2 cartas do seu deck.</p>
-                            </div>
-                        </div>
+                    <div class="col-md-4">
+                        <a href="comunidade.html" class="quick-action-card">
+                            <div class="quick-action-icon">🤝</div>
+                            <h4 class="fw-bold text-white">Ver Comunidade</h4>
+                            <p class="mt-2 mb-0">Compartilhe suas decklists e veja as estratégias de outros jogadores.</p>
+                        </a>
                     </div>
+
                 </div>
             </div>
         </section>
-        <section class="container text-center mt-5">
-            <h2 class="mb-4 text-white text-center" style="background: linear-gradient(to top left, #fffb00,#ffa600, #800080);
-                -webkit-background-clip:text;
-                -webkit-text-fill-color: transparent;
-                ">🎉Novidades🎉</h2>
-            <p class="text-white mb-4" style="font-size: 18px;">Fique por dentro das últimas novidades do mundo de Yu-Gi-Oh! e da Greed Store.</p>
-            <div class="row justify-content-center">
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="imagens/novidade1.jpg" class="card-img-top" alt="Novidade 1">
-                        <div class="card-body">
-                            <h5 class="card-title">Lançamento do novo set de cartas</h5>
-                            <p class="card-text">Confira as novas cartas do set XYZ, com habilidades incríveis e arte impressionante!</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="imagens/novidade2.jpg" class="card-img-top" alt="Novidade 2">
-                        <div class="card-body">
-                            <h5 class="card-title">Evento de Duelo Online</h5>
-                            <p class="card-text">Participe do nosso evento de duelo online e concorra a prêmios exclusivos!</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="imagens/novidade3.jpg" class="card-img-top" alt="Novidade 3">
-                        <div class="card-body">
-                            <h5 class="card-title">Promoção de Cartas Raras</h5>
-                            <p class="card-text">Aproveite nossa promoção especial de cartas raras, com descontos imperdíveis por tempo limitado!</p>
-                        </div>
-                    </div>
-                </div>  
-            </div>
-        </section>
-        
-        <section class="container text-center mt-5" id="caixaRedesSociais">
-            <h2 class="text-white">Siga-nos em nossas redes sociais🤳📲🌎</h2>
-            <div class="d-flex justify-content-center mt-3">
-                <a href="#" class="btn btn-primary mx-2">Facebook</a>
-                <a href="#" class="btn btn-info mx-2">BlueSky</a>
-                <a href="#" class="btn btn-danger mx-2">Instagram</a>
-                <a href="#" class="btn btn-secondary mx-2">LinkedIn</a>
+
+        <section class="container text-center mt-2 mb-5" id="caixaRedesSociais">
+            <h3 class="text-white fw-bold mb-4">Siga-nos em nossas redes sociais 🤳📲🌎</h3>
+            <div class="d-flex justify-content-center flex-wrap gap-3">
+                <a href="#" class="btn btn-primary px-4 py-2 fw-bold">Facebook</a>
+                <a href="#" class="btn btn-info px-4 py-2 fw-bold text-dark">BlueSky</a>
+                <a href="#" class="btn btn-danger px-4 py-2 fw-bold">Instagram</a>
+                <a href="#" class="btn btn-secondary px-4 py-2 fw-bold">LinkedIn</a>
             </div>
         </section>
     </main>
 
-    <footer class="bg-dark text-center text-white py-3 mt-5">
+    <footer class="bg-dark text-center text-white py-4 mt-auto border-top border-secondary">
         <p>&copy; 2026 Greed Store™. Todos os direitos reservados.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/script.js"></script>
     <script src="js/auth.js"></script>
 </body>
 </html>

@@ -123,7 +123,6 @@ function atualizarNavbar() {
         // Logado: exibe nome, link para perfil e botão sair
         dynamicHtml = `
             <a class="nav-link dynamic-link" href="perfil.html">Minha Conta</a>
-            <span class="nav-link text-light dynamic-link">Olá, ${user.username}</span>
             <button id="logoutBtn" class="btn btn-outline-light ms-2 dynamic-link">Sair</button>
         `;
         if (user.role === 'admin') {

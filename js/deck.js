@@ -1,10 +1,10 @@
 // ==========================================================
-// deck.js – CRUD de decks com botão "Salvar" em cada card
+// deck.js – Construtor de Decks com dois modos (builder + listagem)
 // ==========================================================
 
 const STORAGE_KEY = 'greedstore_decks';
 let decks = [];
-let deckAtivoId = null;          // Deck que está sendo editado (para adicionar cartas)
+let deckAtual = null;           // deck que está sendo editado no builder
 let termoBusca = '';
 let paginaCartas = 0;
 const CARTAS_POR_PAGINA = 20;
@@ -14,9 +14,22 @@ function gerarId() {
     return Date.now() + '-' + Math.random().toString(36).substr(2, 8);
 }
 
+function getCurrentUsername() {
+    const user = typeof getCurrentUser !== 'undefined' ? getCurrentUser() : null;
+    return user ? user.username : null;
+}
+
+function isAdmin() {
+    const user = typeof getCurrentUser !== 'undefined' ? getCurrentUser() : null;
+    return user && user.role === 'admin';
+}
+
 function salvarDecks() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(decks));
-    renderizarListaDecks();   // Atualiza a interface (miniaturas, etc.)
+    // Se estiver no modo visualização, atualiza a lista
+    if (document.getElementById('modoVisualizacao').style.display !== 'none') {
+        renderizarListaVisualizacao();
+    }
 }
 
 function carregarDecks() {
@@ -24,214 +37,345 @@ function carregarDecks() {
     if (dados) {
         decks = JSON.parse(dados);
     } else {
-        decks = [
-            { id: gerarId(), nome: 'Deck Poderoso', cartas: [] },
-            { id: gerarId(), nome: 'Deck Rápido', cartas: [] },
-            { id: gerarId(), nome: 'Deck Defensivo', cartas: [] }
-        ];
-        salvarDecks();
+        decks = [];
     }
-    renderizarListaDecks();
+
+    // MIGRAÇÃO: adiciona owner para decks antigos
+    const currentUser = getCurrentUsername();
+    let mudou = false;
+    decks = decks.map(deck => {
+        if (!deck.owner) {
+            mudou = true;
+            return { ...deck, owner: currentUser || 'admin' };
+        }
+        return deck;
+    });
+    if (mudou) salvarDecks();
+
+    // Define o deck atual (primeiro deck do usuário ou cria novo)
+    const userDecks = decks.filter(d => d.owner === currentUser);
+    if (userDecks.length > 0) {
+        deckAtual = JSON.parse(JSON.stringify(userDecks[0]));
+    } else {
+        criarNovoDeckBuilder();  // isso define deckAtual e chama atualizarBuilderUI
+    }
+
+    // Atualiza a interface do builder (caso deckAtual já exista)
+    atualizarBuilderUI();
 }
 
-// ---------- RENDERIZAÇÃO DOS DECKS ----------
-function renderizarListaDecks() {
-    const container = document.getElementById('listaDecks');
-    if (!container) return;
-
-    if (decks.length === 0) {
-        container.innerHTML = '<p class="text-muted text-center">Nenhum deck criado. Clique em "+ Novo Deck".</p>';
+function criarNovoDeckBuilder() {
+    const currentUser = getCurrentUsername();
+    if (!currentUser) {
+        alert('Você precisa estar logado para criar um deck.');
         return;
     }
-
-    container.innerHTML = '';
-    decks.forEach(deck => {
-        const deckDiv = document.createElement('div');
-        deckDiv.className = 'deck-card';
-        if (deckAtivoId === deck.id) deckDiv.classList.add('active');
-
-        deckDiv.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <strong class="deck-nome" data-id="${deck.id}">${escapeHtml(deck.nome)}</strong>
-                    <button class="editar-nome" data-id="${deck.id}">✎</button>
-                </div>
-                <div>
-                    <button class="btn btn-sm btn-primary salvar-deck" data-id="${deck.id}">💾 Salvar</button>
-                </div>
-            </div>
-            <div class="deck-area" data-deck-id="${deck.id}"></div>
-            <div class="deck-botoes mt-2">
-                <button class="btn btn-sm btn-secondary visualizar-deck" data-id="${deck.id}">Visualizar</button>
-                <button class="btn btn-sm btn-info editar-deck" data-id="${deck.id}">Editar</button>
-                <button class="btn btn-sm btn-danger excluir-deck" data-id="${deck.id}">Excluir</button>
-            </div>
-        `;
-        container.appendChild(deckDiv);
-
-        // Preencher miniaturas das cartas
-        const deckArea = deckDiv.querySelector('.deck-area');
-        deck.cartas.forEach((carta, idx) => {
-            deckArea.appendChild(criarMiniaturaCarta(carta, deck.id, idx));
-        });
-    });
-
-    // Eventos dos botões
-    document.querySelectorAll('.visualizar-deck').forEach(btn => {
-        btn.addEventListener('click', () => visualizarDeck(btn.dataset.id));
-    });
-    document.querySelectorAll('.editar-deck').forEach(btn => {
-        btn.addEventListener('click', () => ativarDeck(btn.dataset.id));
-    });
-    document.querySelectorAll('.excluir-deck').forEach(btn => {
-        btn.addEventListener('click', () => excluirDeck(btn.dataset.id));
-    });
-    document.querySelectorAll('.salvar-deck').forEach(btn => {
-        btn.addEventListener('click', () => salvarDeckEspecifico(btn.dataset.id));
-    });
-    document.querySelectorAll('.editar-nome').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            renomearDeck(btn.dataset.id);
-        });
-    });
-    document.querySelectorAll('.deck-nome').forEach(nomeEl => {
-        nomeEl.addEventListener('dblclick', () => renomearDeck(nomeEl.dataset.id));
-    });
+    deckAtual = {
+        id: gerarId(),
+        nome: `Novo Deck ${decks.filter(d => d.owner === currentUser).length + 1}`,
+        cartas: [],
+        owner: currentUser
+    };
+    atualizarBuilderUI();
 }
 
-function criarMiniaturaCarta(carta, deckId, idx) {
+function atualizarBuilderUI() {
+    if (!deckAtual) return;
+    document.getElementById('builderDeckNome').innerText = deckAtual.nome;
+    const container = document.getElementById('builderDeckArea');
+    container.innerHTML = '';
+    deckAtual.cartas.forEach((carta, idx) => {
+        container.appendChild(criarMiniaturaCarta(carta, idx));
+    });
+    document.getElementById('builderCardCount').innerText = `${deckAtual.cartas.length}/60 Cartas`;
+}
+
+function criarMiniaturaCarta(carta, idx) {
     const div = document.createElement('div');
     div.className = 'carta-mini';
     div.innerHTML = `
         <img src="${carta.imagem}" alt="${escapeHtml(carta.nome)}">
-        <p title="${escapeHtml(carta.nome)}">${carta.nome.length > 10 ? carta.nome.substring(0, 8) + '…' : carta.nome}</p>
-        <button class="remover-carta" data-deck="${deckId}" data-index="${idx}">✕</button>
+        <p title="${escapeHtml(carta.nome)}">${carta.nome}</p>
+        <button class="remover-carta" data-index="${idx}" title="Remover">✕</button>
     `;
-    const btnRemover = div.querySelector('.remover-carta');
-    btnRemover.addEventListener('click', (e) => {
+    div.querySelector('.remover-carta').addEventListener('click', (e) => {
         e.stopPropagation();
-        removerCartaDoDeck(deckId, parseInt(btnRemover.dataset.index));
+        removerCartaDoDeckAtual(parseInt(e.currentTarget.dataset.index));
     });
     return div;
 }
 
-// Atualiza a área de miniaturas de um deck específico
-function atualizarDeckArea(deckId) {
-    const deckArea = document.querySelector(`.deck-area[data-deck-id="${deckId}"]`);
-    if (!deckArea) return;
-    const deck = decks.find(d => d.id === deckId);
-    if (!deck) return;
-    deckArea.innerHTML = '';
-    deck.cartas.forEach((carta, idx) => {
-        deckArea.appendChild(criarMiniaturaCarta(carta, deckId, idx));
-    });
+function removerCartaDoDeckAtual(idx) {
+    deckAtual.cartas.splice(idx, 1);
+    atualizarBuilderUI();
 }
 
-// ---------- AÇÕES DOS DECKS ----------
-function visualizarDeck(id) {
-    const deck = decks.find(d => d.id === id);
-    if (!deck) return;
-    const modalBody = document.getElementById('modalBody');
-    if (!modalBody) return;
-    let cartasHtml = '';
-    if (deck.cartas.length === 0) {
-        cartasHtml = '<p>Este deck ainda não tem cartas.</p>';
-    } else {
-        cartasHtml = '<div class="row">';
-        deck.cartas.forEach(carta => {
-            cartasHtml += `
-                <div class="col-3 text-center mb-2">
-                    <img src="${carta.imagem}" style="width:100%; border-radius:4px;">
-                    <small>${escapeHtml(carta.nome)}</small>
-                </div>
-            `;
-        });
-        cartasHtml += '</div>';
+function adicionarCartaAoDeckAtual(carta) {
+    if (deckAtual.cartas.length >= 60) {
+        alert('Limite máximo de 60 cartas atingido.');
+        return;
     }
-    modalBody.innerHTML = `
-        <h5>${escapeHtml(deck.nome)}</h5>
-        <p><strong>Total de cartas:</strong> ${deck.cartas.length}</p>
-        <hr>
-        <h6>Cartas no deck:</h6>
-        ${cartasHtml}
-    `;
-    const modal = new bootstrap.Modal(document.getElementById('infoModal'));
+    deckAtual.cartas.push(carta);
+    atualizarBuilderUI();
+    mostrarMensagem(`➕ ${carta.nome} adicionada ao deck.`);
+}
+
+function salvarDeckAtual() {
+    if (!deckAtual) return;
+    const index = decks.findIndex(d => d.id === deckAtual.id);
+    if (index !== -1) {
+        decks[index] = deckAtual;
+    } else {
+        decks.push(deckAtual);
+    }
+    salvarDecks();
+    mostrarMensagem(`✔️ Deck "${deckAtual.nome}" salvo!`);
+}
+
+function renomearDeckAtual() {
+    if (!deckAtual) return;
+    const novoNome = prompt('Digite o novo nome do deck:', deckAtual.nome);
+    if (novoNome && novoNome.trim() !== '') {
+        deckAtual.nome = novoNome.trim();
+        atualizarBuilderUI();
+    }
+}
+
+function carregarOutroDeck() {
+    const currentUser = getCurrentUsername();
+    const userDecks = decks.filter(d => d.owner === currentUser);
+    if (userDecks.length === 0) {
+        alert('Você não tem outros decks. Crie um novo primeiro.');
+        return;
+    }
+    const select = document.getElementById('selectCarregarDeck');
+    select.innerHTML = userDecks.map(d => `<option value="${d.id}">${escapeHtml(d.nome)}</option>`).join('');
+    const modal = new bootstrap.Modal(document.getElementById('carregarDeckModal'));
     modal.show();
 }
 
-function ativarDeck(id) {
-    deckAtivoId = id;
-    renderizarListaDecks();  // destaca o deck ativo
-    // Rola até o deck ativo
-    const activeDeck = document.querySelector('.deck-card.active');
-    if (activeDeck) activeDeck.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-function renomearDeck(id) {
-    const deck = decks.find(d => d.id === id);
-    if (!deck) return;
-    const novoNome = prompt('Digite o novo nome do deck:', deck.nome);
-    if (novoNome && novoNome.trim() !== '') {
-        deck.nome = novoNome.trim();
-        salvarDecks();  // salva e re-renderiza
+function confirmarCarregarDeck() {
+    const deckId = document.getElementById('selectCarregarDeck').value;
+    if (!deckId) return;
+    const deckEncontrado = decks.find(d => d.id === deckId);
+    if (deckEncontrado) {
+        deckAtual = JSON.parse(JSON.stringify(deckEncontrado));
+        atualizarBuilderUI();
+        bootstrap.Modal.getInstance(document.getElementById('carregarDeckModal')).hide();
+        mostrarMensagem(`📂 Deck "${deckAtual.nome}" carregado.`);
+    } else {
+        alert('Deck não encontrado.');
     }
 }
 
-function excluirDeck(id) {
-    if (confirm('Tem certeza que deseja excluir este deck permanentemente?')) {
-        decks = decks.filter(d => d.id !== id);
-        if (deckAtivoId === id) deckAtivoId = null;
-        salvarDecks();
+// ---------- MODO VISUALIZAÇÃO ----------
+function renderizarListaVisualizacao() {
+    const container = document.getElementById('listaDecksVisualizacao');
+    if (!container) return;
+
+    const currentUser = getCurrentUsername();
+    const userDecks = decks.filter(d => d.owner === currentUser);
+
+    if (userDecks.length === 0) {
+        container.innerHTML = '<div class="col-12 text-center text-muted">Você ainda não criou nenhum deck. Vá para o modo "Criar/Atualizar Deck" e crie um.</div>';
+        return;
     }
+
+    container.innerHTML = '';
+    userDecks.forEach(deck => {
+        const col = document.createElement('div');
+        col.className = 'col-12 col-sm-6 col-md-4 col-lg-3';
+        col.innerHTML = `
+            <div class="deck-list-card h-100">
+                <h5>${escapeHtml(deck.nome)}</h5>
+                <p class="text-muted">${deck.cartas.length} carta(s)</p>
+                <div class="d-flex gap-2 mt-3">
+                    <button class="btn btn-sm btn-info visualizar-deck" data-id="${deck.id}">👁️ Visualizar</button>
+                    <button class="btn btn-sm btn-danger excluir-deck" data-id="${deck.id}">🗑️ Excluir</button>
+                </div>
+            </div>
+        `;
+        container.appendChild(col);
+    });
+
+    document.querySelectorAll('.visualizar-deck').forEach(btn => {
+        btn.addEventListener('click', () => visualizarDeckFullscreen(btn.dataset.id));
+    });
+    document.querySelectorAll('.excluir-deck').forEach(btn => {
+        btn.addEventListener('click', () => excluirDeckVisualizacao(btn.dataset.id));
+    });
 }
 
-function removerCartaDoDeck(deckId, idx) {
+function visualizarDeckFullscreen(deckId) {
     const deck = decks.find(d => d.id === deckId);
-    if (deck) {
-        deck.cartas.splice(idx, 1);
-        salvarDecks();       // salva e atualiza tudo
-    }
-}
-
-function adicionarCartaAoDeck(carta) {
-    if (!deckAtivoId) {
-        alert('Selecione um deck clicando em "Editar" primeiro.');
-        return;
-    }
-    const deck = decks.find(d => d.id === deckAtivoId);
     if (!deck) return;
-    if (deck.cartas.length >= 60) {
-        alert('Limite máximo de 60 cartas.');
-        return;
-    }
-    deck.cartas.push(carta);
-    salvarDecks();          // salva e atualiza interface
+    abrirVisualizacaoDeck(deck);
 }
 
-function criarNovoDeck() {
-    const novoDeck = {
-        id: gerarId(),
-        nome: `Deck ${decks.length + 1}`,
-        cartas: []
-    };
-    decks.push(novoDeck);
+function excluirDeckVisualizacao(deckId) {
+    if (!confirm('Tem certeza que deseja excluir este deck permanentemente?')) return;
+    decks = decks.filter(d => d.id !== deckId);
+    if (deckAtual && deckAtual.id === deckId) {
+        // O deck que estava sendo editado foi excluído
+        const currentUser = getCurrentUsername();
+        const userDecks = decks.filter(d => d.owner === currentUser);
+        if (userDecks.length > 0) {
+            deckAtual = JSON.parse(JSON.stringify(userDecks[0]));
+        } else {
+            criarNovoDeckBuilder();
+        }
+        atualizarBuilderUI();
+    }
     salvarDecks();
-    ativarDeck(novoDeck.id);  // já seleciona o novo deck
+    renderizarListaVisualizacao();
+    mostrarMensagem('Deck excluído com sucesso.');
 }
 
-// ---------- BOTÃO SALVAR (salva um deck específico) ----------
-function salvarDeckEspecifico(id) {
-    const deck = decks.find(d => d.id === id);
-    if (!deck) return;
+// ---------- FUNÇÕES DE VISUALIZAÇÃO FULLSCREEN (mesmo da comunidade) ----------
+function abrirVisualizacaoDeck(deck) {
+    const modalTitle = document.getElementById('fullDeckModalTitle');
+    const cardsContainer = document.getElementById('fullDeckCardsContainer');
     
-    // Se o deck que está sendo salvo for o deck ativo de edição, removemos a seleção dele
-    if (deckAtivoId === id) {
-        deckAtivoId = null;
+    modalTitle.innerText = `Deck: ${deck.nome} (${deck.cartas.length} cartas)`;
+    cardsContainer.innerHTML = '';
+    
+    deck.cartas.forEach(carta => {
+        const col = document.createElement('div');
+        col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
+        col.innerHTML = `
+            <div class="card-item bg-dark border border-secondary rounded p-2 text-center">
+                <img src="${carta.imagem}" class="img-fluid" alt="${escapeHtml(carta.nome)}">
+                <small class="d-block mt-2 text-truncate" title="${escapeHtml(carta.nome)}">${escapeHtml(carta.nome)}</small>
+                <small class="text-success">US$ ${carta.preco}</small>
+            </div>
+        `;
+        const cardDiv = col.querySelector('.card-item');
+        cardDiv.addEventListener('click', () => {
+            mostrarDetalhesCarta(carta);
+        });
+        cardsContainer.appendChild(col);
+    });
+    
+    const fullModal = new bootstrap.Modal(document.getElementById('fullDeckModal'));
+    fullModal.show();
+}
+
+function mostrarDetalhesCarta(carta) {
+    const modalBody = document.getElementById('cardInfoModalBody');
+    modalBody.innerHTML = `
+        <img src="${carta.imagem}" class="img-fluid mb-3" style="max-height: 300px;">
+        <h5>${escapeHtml(carta.nome)}</h5>
+        <p class="text-success fw-bold">Preço: US$ ${carta.preco}</p>
+    `;
+    const infoModal = new bootstrap.Modal(document.getElementById('cardInfoModal'));
+    infoModal.show();
+}
+
+// ---------- BUSCA DE CARTAS NA API ----------
+async function carregarCartasAPI(termo = '', pagina = 0) {
+    const container = document.getElementById('listaCartas');
+    if (!container) return;
+    
+    container.innerHTML = '<div class="text-center text-info w-100 mt-4">Buscando cartas...</div>';
+    termoBusca = termo;
+    paginaCartas = pagina;
+
+    let url = `https://db.ygoprodeck.com/api/v7/cardinfo.php?language=pt&num=${CARTAS_POR_PAGINA}&offset=${pagina * CARTAS_POR_PAGINA}`;
+    if (termo.trim() !== '') {
+        url = `https://db.ygoprodeck.com/api/v7/cardinfo.php?language=pt&fname=${encodeURIComponent(termo)}&num=${CARTAS_POR_PAGINA}&offset=${pagina * CARTAS_POR_PAGINA}`;
     }
 
-    salvarDecks();  // já faz a persistência completa e remove a borda azul
-    mostrarMensagem(`Deck "${deck.nome}" salvo!`);
+    try {
+        const resp = await fetch(url);
+        if (resp.status === 400) {
+            container.innerHTML = '<div class="text-center text-warning w-100 mt-4">Nenhuma carta encontrada.</div>';
+            renderizarPaginacao(0);
+            return;
+        }
+        const dados = await resp.json();
+        if (!dados.data || dados.data.length === 0) {
+            container.innerHTML = '<div class="text-center text-warning w-100 mt-4">Nenhuma carta encontrada.</div>';
+            renderizarPaginacao(0);
+            return;
+        }
+        renderizarCartas(dados.data);
+        renderizarPaginacao(dados.data.length);
+    } catch (erro) {
+        console.error(erro);
+        container.innerHTML = '<div class="text-center text-danger w-100 mt-4">Erro de conexão. Tente novamente.</div>';
+    }
+}
+
+function renderizarCartas(cartas) {
+    const container = document.getElementById('listaCartas');
+    container.innerHTML = '';
+    
+    cartas.forEach(carta => {
+        const div = document.createElement('div');
+        div.className = 'carta';
+        
+        const img = carta.card_images[0].image_url;
+        const nome = carta.name;
+        const preco = carta.card_prices?.[0]?.tcgplayer_price || '0.00';
+        
+        div.innerHTML = `
+            <button class="info-btn" title="Ver Detalhes">i</button>
+            <img src="${img}" alt="${escapeHtml(nome)}" loading="lazy">
+            <p title="Clique para adicionar ao deck">${escapeHtml(nome)}</p>
+        `;
+        
+        div.addEventListener('click', (e) => {
+            if (e.target.classList.contains('info-btn')) return;
+            adicionarCartaAoDeckAtual({
+                id: carta.id,
+                nome: nome,
+                imagem: img,
+                preco: preco
+            });
+        });
+        
+        const infoBtn = div.querySelector('.info-btn');
+        infoBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const modalBody = document.getElementById('modalBody');
+            document.getElementById('infoModalLabel').innerText = "Detalhes da Carta";
+            modalBody.innerHTML = `
+                <div class="row">
+                    <div class="col-5">
+                        <img src="${img}" class="img-fluid rounded border border-secondary">
+                    </div>
+                    <div class="col-7">
+                        <h5 class="text-info">${escapeHtml(nome)}</h5>
+                        <p class="mb-1 text-light small"><strong>Tipo:</strong> ${carta.type || 'N/A'}</p>
+                        <p class="mb-1 text-light small"><strong>Atr:</strong> ${carta.attribute || 'N/A'}</p>
+                        <p class="mb-1 text-light small"><strong>Nível/Rank:</strong> ${carta.level || carta.rank || 'N/A'}</p>
+                        <hr class="border-secondary my-2">
+                        <p class="small text-muted" style="white-space: pre-wrap; font-size: 12px;">${escapeHtml(carta.desc || 'Sem descrição')}</p>
+                    </div>
+                </div>
+            `;
+            const modal = new bootstrap.Modal(document.getElementById('infoModal'));
+            modal.show();
+        });
+        container.appendChild(div);
+    });
+}
+
+function renderizarPaginacao(totalItensRecebidos) {
+    const container = document.getElementById('paginacaoCartas');
+    if (!container) return;
+    const temMais = totalItensRecebidos === CARTAS_POR_PAGINA;
+    container.innerHTML = `
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-info btn-sm fw-bold" id="btnPagAnterior" ${paginaCartas === 0 ? 'disabled' : ''}>⮜ Ant</button>
+            <span class="text-light d-flex align-items-center" style="font-size: 14px;">Pág ${paginaCartas + 1}</span>
+            <button class="btn btn-outline-info btn-sm fw-bold" id="btnPagProxima" ${!temMais ? 'disabled' : ''}>Próx ⮞</button>
+        </div>
+    `;
+    const btnAnt = document.getElementById('btnPagAnterior');
+    const btnProx = document.getElementById('btnPagProxima');
+    if (btnAnt) btnAnt.addEventListener('click', () => carregarCartasAPI(termoBusca, paginaCartas - 1));
+    if (btnProx) btnProx.addEventListener('click', () => carregarCartasAPI(termoBusca, paginaCartas + 1));
 }
 
 function mostrarMensagem(texto) {
@@ -245,97 +389,9 @@ function mostrarMensagem(texto) {
     }
 }
 
-// ---------- BUSCA DE CARTAS NA API ----------
-async function carregarCartasAPI(termo = '', pagina = 0) {
-    const container = document.getElementById('listaCartas');
-    if (!container) return;
-    container.innerHTML = '<div class="text-center text-muted">Carregando cartas...</div>';
-    termoBusca = termo;
-    paginaCartas = pagina;
-
-    let url = `https://db.ygoprodeck.com/api/v7/cardinfo.php?num=${CARTAS_POR_PAGINA}&offset=${pagina * CARTAS_POR_PAGINA}`;
-    if (termo.trim() !== '') {
-        url = `https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${encodeURIComponent(termo)}&num=${CARTAS_POR_PAGINA}&offset=${pagina * CARTAS_POR_PAGINA}`;
-    }
-
-    try {
-        const resp = await fetch(url);
-        const dados = await resp.json();
-        if (!dados.data || dados.data.length === 0) {
-            container.innerHTML = '<div class="text-center text-muted">Nenhuma carta encontrada.</div>';
-            renderizarPaginacao(0);
-            return;
-        }
-        renderizarCartas(dados.data);
-        renderizarPaginacao(dados.data.length);
-    } catch (erro) {
-        console.error(erro);
-        container.innerHTML = '<div class="text-center text-danger">Erro de conexão. Tente novamente.</div>';
-    }
-}
-
-function renderizarCartas(cartas) {
-    const container = document.getElementById('listaCartas');
-    container.innerHTML = '';
-    cartas.forEach(carta => {
-        const div = document.createElement('div');
-        div.className = 'carta';
-        const img = carta.card_images[0].image_url;
-        const nome = carta.name;
-        const preco = carta.card_prices[0]?.tcgplayer_price || '0';
-        div.innerHTML = `
-            <img src="${img}" alt="${escapeHtml(nome)}" loading="lazy">
-            <p>${escapeHtml(nome)}</p>
-            <button class="info-btn">i</button>
-        `;
-        div.addEventListener('click', (e) => {
-            if (e.target.classList.contains('info-btn')) return;
-            adicionarCartaAoDeck({
-                id: carta.id,
-                nome: nome,
-                imagem: img,
-                preco: preco
-            });
-        });
-        const infoBtn = div.querySelector('.info-btn');
-        infoBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const modalBody = document.getElementById('modalBody');
-            modalBody.innerHTML = `
-                <p><strong>Nome:</strong> ${escapeHtml(nome)}</p>
-                <p><strong>Tipo:</strong> ${carta.type || 'N/A'}</p>
-                <p><strong>Descrição:</strong> ${escapeHtml(carta.desc || 'Sem descrição')}</p>
-                <p><strong>Preço:</strong> $${preco}</p>
-                <p><strong>Atributo:</strong> ${carta.attribute || 'N/A'}</p>
-                <p><strong>Nível/Rank:</strong> ${carta.level || carta.rank || 'N/A'}</p>
-            `;
-            const modal = new bootstrap.Modal(document.getElementById('infoModal'));
-            modal.show();
-        });
-        container.appendChild(div);
-    });
-}
-
-function renderizarPaginacao(totalItens) {
-    const container = document.getElementById('paginacaoCartas');
-    if (!container) return;
-    const temMais = totalItens === CARTAS_POR_PAGINA;
-    container.innerHTML = `
-        <div class="d-flex gap-2">
-            <button class="btn btn-dark" id="btnPagAnterior" ${paginaCartas === 0 ? 'disabled' : ''}>Anterior</button>
-            <span>Página ${paginaCartas + 1}</span>
-            <button class="btn btn-dark" id="btnPagProxima" ${!temMais ? 'disabled' : ''}>Próxima</button>
-        </div>
-    `;
-    const btnAnt = document.getElementById('btnPagAnterior');
-    const btnProx = document.getElementById('btnPagProxima');
-    if (btnAnt) btnAnt.addEventListener('click', () => carregarCartasAPI(termoBusca, paginaCartas - 1));
-    if (btnProx) btnProx.addEventListener('click', () => carregarCartasAPI(termoBusca, paginaCartas + 1));
-}
-
 function escapeHtml(texto) {
     if (!texto) return '';
-    return texto.replace(/&/g, '&amp;')
+    return texto.toString().replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
@@ -345,14 +401,40 @@ function escapeHtml(texto) {
 // ---------- INICIALIZAÇÃO ----------
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof protegerPagina === 'function') protegerPagina();
-    carregarDecks();
+    carregarDecks();      // carrega e define deckAtual, já chama atualizarBuilderUI internamente
     carregarCartasAPI('', 0);
 
-    document.getElementById('btnNovoDeck')?.addEventListener('click', criarNovoDeck);
-    document.getElementById('btnBuscarCartas')?.addEventListener('click', () => {
+    // Toggle entre modos
+    const modoConstrutor = document.getElementById('modoConstrutor');
+    const modoVisualizacao = document.getElementById('modoVisualizacao');
+    const btnCriar = document.getElementById('btnModoCriar');
+    const btnVisualizar = document.getElementById('btnModoVisualizar');
+
+    btnCriar.addEventListener('click', () => {
+        modoConstrutor.style.display = 'block';
+        modoVisualizacao.style.display = 'none';
+        btnCriar.classList.add('active');
+        btnVisualizar.classList.remove('active');
+        atualizarBuilderUI();  // Garante que a UI do builder esteja atualizada
+    });
+    btnVisualizar.addEventListener('click', () => {
+        modoConstrutor.style.display = 'none';
+        modoVisualizacao.style.display = 'block';
+        btnVisualizar.classList.add('active');
+        btnCriar.classList.remove('active');
+        renderizarListaVisualizacao();
+    });
+
+    // Eventos do builder
+    document.getElementById('btnNovoDeckBuilder').addEventListener('click', criarNovoDeckBuilder);
+    document.getElementById('btnSalvarDeck').addEventListener('click', salvarDeckAtual);
+    document.getElementById('builderRenomearBtn').addEventListener('click', renomearDeckAtual);
+    document.getElementById('builderCarregarDeck').addEventListener('click', carregarOutroDeck);
+    document.getElementById('confirmarCarregarDeck').addEventListener('click', confirmarCarregarDeck);
+    document.getElementById('btnBuscarCartas').addEventListener('click', () => {
         carregarCartasAPI(document.getElementById('campoBuscaCartas').value, 0);
     });
-    document.getElementById('campoBuscaCartas')?.addEventListener('keypress', (e) => {
+    document.getElementById('campoBuscaCartas').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') carregarCartasAPI(e.target.value, 0);
     });
 });

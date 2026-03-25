@@ -34,7 +34,7 @@
         <div class="collapse navbar-collapse" id="menu">
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="index.html">Home</a>
-                <a class="nav-link" href="martplace.html">Marketplace</a>
+                <a class="nav-link" href="marketplace.html">Marketplace</a>
                 <a class="nav-link" href="decks.html">Decks</a>
                 <a class="nav-link" href="comunidade.html">Comunidade</a>
                 <a class="nav-link" href="favoritos.html">Favoritos</a>
@@ -97,47 +97,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/auth.js"></script>
-    <script>
-        // Se já estiver logado, redireciona para o perfil
-        if (typeof isLoggedIn !== 'undefined' && isLoggedIn()) {
-            window.location.href = 'perfil.html';
-        }
-
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            const result = login(username, password);
-            const msgDiv = document.getElementById('loginMessage');
-            if (result.success) {
-                msgDiv.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
-                setTimeout(() => { window.location.href = 'perfil.html'; }, 1000);
-            } else {
-                msgDiv.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
-            }
-        });
-
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('regUsername').value;
-            const password = document.getElementById('regPassword').value;
-            const confirm = document.getElementById('regConfirm').value;
-            if (password !== confirm) {
-                document.getElementById('registerMessage').innerHTML = `<div class="alert alert-danger">As senhas não coincidem.</div>`;
-                return;
-            }
-            const result = register(username, password);
-            const msgDiv = document.getElementById('registerMessage');
-            if (result.success) {
-                msgDiv.innerHTML = `<div class="alert alert-success">${result.message} Agora faça login.</div>`;
-                document.getElementById('registerForm').reset();
-                // Muda para a aba de login
-                const loginTab = new bootstrap.Tab(document.getElementById('login-tab'));
-                loginTab.show();
-            } else {
-                msgDiv.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
-            }
-        });
-    </script>
+    <script src="js/conta.js"></script>
 </body>
 </html>
