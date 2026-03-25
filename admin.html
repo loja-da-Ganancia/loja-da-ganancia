@@ -6,21 +6,113 @@
     <title>Painel Administrativo | Greed Store</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* ===== ESTILO GERAL ESCURO ===== */
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
         .navbar-brand img {
             height: 45px;
         }
-        .table-users th, .table-users td {
-            vertical-align: middle;
+
+        /* ===== CARDS DE ESTATÍSTICAS ===== */
+        .card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            transition: 0.2s;
         }
+        .card:hover {
+            border-color: #00d2ff;
+            box-shadow: 0 4px 10px rgba(0, 210, 255, 0.15);
+        }
+        .card-header {
+            background-color: #0d1117;
+            border-bottom: 1px solid #30363d;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .card-body {
+            color: #c9d1d9;
+        }
+        .card-title {
+            color: #ffffff;
+        }
+
+        /* ===== TABELA ===== */
+        .table {
+            color: #c9d1d9;
+            background-color: #161b22;
+            border-color: #30363d;
+        }
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #0d1117;
+        }
+        .table-bordered {
+            border-color: #30363d;
+        }
+        .table-bordered td, .table-bordered th {
+            border-color: #30363d;
+        }
+        .table thead th {
+            background-color: #0d1117;
+            border-bottom: 2px solid #30363d;
+            color: #ffffff;
+        }
+        .table tbody tr:hover {
+            background-color: #21262d;
+        }
+
+        /* ===== BADGES ===== */
         .role-badge {
             font-size: 0.8rem;
             padding: 0.3rem 0.6rem;
+        }
+        .bg-danger {
+            background-color: #e53238 !important;
+        }
+        .bg-secondary {
+            background-color: #30363d !important;
+        }
+
+        /* ===== BOTÕES ===== */
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #000;
+        }
+        .btn-danger {
+            background-color: #e53238;
+            border-color: #e53238;
+        }
+        .btn-danger:hover {
+            background-color: #c91f2c;
+            border-color: #c91f2c;
+        }
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #e0a800;
+        }
+
+        /* ===== TÍTULOS ===== */
+        h2, h3, h4 {
+            color: #ffffff;
+        }
+        .text-muted {
+            color: #8b949e !important;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background-color: #161b22 !important;
+            border-top: 1px solid #30363d;
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 border-bottom border-secondary">
         <a class="navbar-brand" href="index.html">
             <img src="imagens/logo_sem_fundo_greedstore.png" alt="Logo Greed Store">
         </a>
@@ -28,14 +120,14 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="menu">
-        <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="index.html">Home</a>
-        <a class="nav-link" href="marketplace.html">Marketplace</a>
-        <a class="nav-link" href="decks.html">Decks</a>
-        <a class="nav-link" href="comunidade.html">Comunidade</a>
-        <a class="nav-link" href="favoritos.html">Favoritos</a>
-        <!-- O link "Conta" foi removido – será inserido dinamicamente pelo auth.js -->
-        </div>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">Home</a>
+                <a class="nav-link" href="marketplace.html">Marketplace</a>
+                <a class="nav-link" href="decks.html">Decks</a>
+                <a class="nav-link" href="comunidade.html">Comunidade</a>
+                <a class="nav-link" href="favoritos.html">Favoritos</a>
+                <!-- O link "Conta" será inserido dinamicamente pelo auth.js -->
+            </div>
         </div>
     </nav>
 
@@ -72,7 +164,7 @@
             </div>
         </div>
 
-        <h3>📋 Gerenciar Usuários</h3>
+        <h3 class="border-bottom border-secondary pb-2 mb-3">📋 Gerenciar Usuários</h3>
         <div class="table-responsive">
             <table class="table table-striped table-bordered table-users">
                 <thead class="table-dark">
@@ -89,13 +181,12 @@
         </div>
     </div>
 
-    <footer class="bg-dark text-center text-white py-3 mt-5">
+    <footer class="bg-dark text-center text-white py-4 mt-5 border-top border-secondary">
         <p>&copy; 2026 Greed Store™. Todos os direitos reservados.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/admin.js"></script>
-    <script src="js/auth.js"></script>
 </body>
 </html>

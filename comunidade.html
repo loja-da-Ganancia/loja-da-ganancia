@@ -8,8 +8,37 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body { background-color: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        /* TEMA ESCURO ABSOLUTO E COR PORCELANA (PADRÃO GREED STORE) */
+        html {
+            background-color: #0d1117 !important;
+        }
+        
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #0d1117 !important;
+            color: #F2F3F4 !important; /* Cor Porcelana */
+        }
+
+        /* Barra de rolagem escura para tirar o branco padrão */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00d2ff; }
+
         .navbar-brand img { height: 45px; }
+        
+        .form-control, .form-select {
+            background-color: #0d1117 !important;
+            border: 1px solid #30363d !important;
+            color: #F2F3F4 !important;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #161b22 !important;
+            color: #ffffff !important;
+            border-color: #00d2ff;
+            box-shadow: 0 0 5px rgba(0, 210, 255, 0.5);
+        }
         
         /* Estilo dos Cards de Post */
         .post-card {
@@ -18,8 +47,9 @@
             border-radius: 12px;
             margin-bottom: 2rem;
             transition: transform 0.2s;
+            color: #F2F3F4;
         }
-        .post-card:hover { border-color: #00d2ff; }
+        .post-card:hover { border-color: #00d2ff; box-shadow: 0 4px 15px rgba(0, 210, 255, 0.1); }
 
         /* Foto do Autor Dinâmica */
         .author-avatar {
@@ -28,155 +58,201 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid #00d2ff;
-            background-color: #30363d;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: #fff;
+            background-color: #0d1117;
         }
-        .author-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 
-        /* Grid de Cartas no Post */
-        .deck-preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-            background: #0d1117;
-            padding: 15px;
-            border-radius: 8px;
+        /* ZOOM NA CARTA (Clicável e Limitado à Tela) */
+        .img-zoomable {
+            transition: all 0.3s ease-in-out;
+            cursor: zoom-in;
+            position: relative;
+            z-index: 1040;
+        }
+        
+        .img-zoomable:hover {
+            transform: scale(1.03);
+        }
+        
+        .img-zoomed {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important; 
+            max-height: 90vh !important; 
+            max-width: 95vw !important;  
+            width: auto !important;
+            height: auto !important;
+            z-index: 9999 !important; 
+            box-shadow: 0 20px 80px rgba(0,0,0,0.95) !important; 
+            cursor: zoom-out;
+            border-radius: 10px;
+            background-color: #0d1117; 
+        }
+        
+        /* Modais */
+        .modal-content {
+            background-color: #161b22 !important; 
             border: 1px solid #30363d;
         }
-        .card-mini-img { width: 100%; border-radius: 4px; border: 1px solid #444; }
-
-        .btn-comunidade {
-            background-color: #212529;
-            color: #00d2ff;
-            border: 1px solid #00d2ff;
-            font-weight: bold;
-        }
-        .btn-comunidade:hover { background-color: #00d2ff; color: #000; }
-
-        /* Ajuste de escala para posts grandes */
-        .reduced-scale { transform: scale(0.95); transform-origin: top center; }
-        #fullDeckCardsContainer .card-item {
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        #fullDeckCardsContainer .card-item:hover {
-            transform: scale(1.05);
-            border-color: #00d2ff;
-        }
-        #fullDeckCardsContainer img {
-            width: 100%;
-            border-radius: 8px;
-            background: #0d1117;
-            padding: 5px;
+        .modal-header {
+            border-bottom: 1px solid #30363d;
         }
     </style>
 </head>
-<body>
-    
+
+<body class="d-flex flex-column min-vh-100">
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 border-bottom border-secondary">
         <a class="navbar-brand" href="index.html">
             <img src="imagens/logo_sem_fundo_greedstore.png" alt="Logo">
         </a>
-        <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="index.html">Home</a>
-            <a class="nav-link" href="marketplace.html">Marketplace</a>
-            <a class="nav-link" href="decks.html">Decks</a>
-            <a class="nav-link" href="comunidade.html">Comunidade</a>
-            <a class="nav-link" href="favoritos.html">Favoritos</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">Home</a>
+                <a class="nav-link" href="marketplace.html">Marketplace</a>
+                <a class="nav-link" href="decks.html">Decks</a>
+                <a class="nav-link active" href="comunidade.html">Comunidade</a>
+                <a class="nav-link" href="favoritos.html">Favoritos</a>
+            </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-white">Postagens</h2>
-            <button class="btn btn-comunidade" onclick="prepararNovoPost()">+ Postar meu Deck</button>
+    <main class="flex-grow-1 container mt-5 mb-5">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3 flex-wrap gap-3">
+            <h2 class="text-white fw-bold m-0">🤝 Feed da Comunidade</h2>
+            <button class="btn btn-info fw-bold" onclick="prepararNovoPost()">✏️ Compartilhar Deck</button>
         </div>
 
-        <div class="row">
-            <div class="col-lg-8 mx-auto" id="feed">
-                <!-- Posts carregados aqui -->
-            </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10" id="feedComunidade">
+                </div>
         </div>
-    </div>
 
-    <!-- Modal de Postagem -->
-    <div class="modal fade" id="modalPost" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content bg-dark text-white border-secondary">
-                <div class="modal-header border-secondary">
-                    <h5 class="modal-title" id="modalTitle">Compartilhar Estratégia</h5>
+    </main>
+
+    <!-- Modal para criar novo post -->
+    <div class="modal fade" id="modalPost" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white" id="modalTitle">Novo Post</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formPost">
                         <input type="hidden" id="postId">
+                        <input type="hidden" id="postAuthorName">
+                        
                         <div class="mb-3">
-                            <label class="form-label">Nome de Exibição</label>
-                            <input type="text" class="form-control bg-secondary text-white border-0" id="postAuthorName" required>
+                            <label class="form-label fw-bold text-info">Selecione o Deck para Compartilhar:</label>
+                            <select id="postDeckId" class="form-select" required></select>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Descrição / Combo</label>
-                            <textarea class="form-control bg-secondary text-white border-0" id="postComment" rows="3" required></textarea>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-info">Comentário / Estratégia:</label>
+                            <textarea id="postContent" class="form-control" rows="5" placeholder="Explique como esse deck funciona para a comunidade..." required></textarea>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Escolha seu Deck</label>
-                            <select class="form-select bg-secondary text-white border-0" id="postDeckId" required></select>
-                        </div>
+                        
+                        <button type="submit" class="btn btn-success w-100 fw-bold">Publicar no Feed</button>
                     </form>
                 </div>
-                <div class="modal-footer border-secondary">
-                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-info fw-bold" onclick="publicarPost()">Publicar Agora</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar post -->
+    <div class="modal fade" id="modalEditPost" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white">Editar Postagem</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditPost">
+                        <input type="hidden" id="editPostId">
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-info">Comentário / Estratégia:</label>
+                            <textarea id="editPostContent" class="form-control" rows="5" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-warning w-100 fw-bold text-dark">Salvar Alterações</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="bg-dark text-center text-white py-4 mt-5 border-top border-secondary">
-        <p>&copy; 2026 Greed Store™ - Todos os direitos reservados.</p>
-    </footer>
-
-    <!-- MODAL FULLSCREEN PARA VISUALIZAR O DECK COMPLETO -->
-    <div class="modal fade" id="fullDeckModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
-    <div class="modal-content bg-dark text-white">
-        <div class="modal-header border-secondary">
-            <h5 class="modal-title" id="fullDeckModalTitle">Visualizando Deck</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body" id="fullDeckModalBody">
-            <div class="row g-3" id="fullDeckCardsContainer">
-                <!-- Cards serão inseridos dinamicamente -->
+    <!-- Modal de compartilhamento (redes sociais) -->
+    <div class="modal fade" id="modalShare" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white">Compartilhar Deck</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="text-muted mb-3" style="font-size: 0.9rem;">Mostre sua estratégia para o mundo!</p>
+                    <div class="d-flex justify-content-center gap-3 mb-4">
+                        <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;" title="Facebook">
+                            <strong style="font-size: 1.2rem;">f</strong>
+                        </button>
+                        <button class="btn btn-info text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;" title="Twitter / X">
+                            <strong style="font-size: 1.2rem;">X</strong>
+                        </button>
+                        <button class="btn btn-success rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;" title="WhatsApp">
+                            <strong style="font-size: 1.2rem;">W</strong>
+                        </button>
+                    </div>
+                    <button class="btn btn-outline-info btn-sm w-100 fw-bold" id="btnCopiarLink">🔗 Copiar Link da Página</button>
+                </div>
             </div>
         </div>
-        <div class="modal-footer border-secondary">
-            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Fechar</button>
-        </div>
-    </div>
-    </div>
     </div>
 
-    <!-- MODAL PARA DETALHES DA CARTA (SIMPLIFICADO) -->
+    <!-- Modal fullscreen para visualizar deck completo -->
+    <div class="modal fade" id="fullDeckModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content" style="background-color: #0d1117 !important; border: none;">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white" id="fullDeckModalTitle">Visualizando Deck</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="fullDeckModalBody" style="background-color: #0d1117 !important;">
+                    <div class="row g-3" id="fullDeckCardsContainer"></div>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid #30363d; background-color: #0d1117 !important;">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para detalhes da carta -->
     <div class="modal fade" id="cardInfoModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-    <div class="modal-content bg-dark text-white">
-        <div class="modal-header border-secondary">
-            <h5 class="modal-title" id="cardInfoModalTitle">Detalhes da Carta</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white" id="cardInfoModalTitle">Detalhes da Carta</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center" id="cardInfoModalBody"></div>
+            </div>
         </div>
-        <div class="modal-body text-center" id="cardInfoModalBody">
-            <!-- Conteúdo dinâmico -->
-        </div>
     </div>
-    </div>
-    </div>
+
+    <footer class="text-center py-4 mt-auto border-top" style="background-color: #0d1117; border-color: #30363d !important; color: #F2F3F4;">
+        <p class="m-0">&copy; 2026 Greed Store™. Todos os direitos reservados.</p>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/auth.js"></script>
-
     <script src="js/comunidade.js"></script>
 </body>
 </html>

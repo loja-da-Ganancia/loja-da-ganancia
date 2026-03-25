@@ -103,18 +103,17 @@ function atualizarNavbar() {
     if (!navContainer) return;
 
     const user = getCurrentUser();
-    // Limpa os links que não são fixos – mas mantém os links fixos se você quiser preservar
-    // Para evitar remover links fixos, vamos apenas adicionar os nossos no final.
-    // Porém, é mais fácil remover todos e recriar com os fixos + os dinâmicos.
-    // Vamos supor que os links fixos são aqueles que não dependem de login.
-    // Se você quiser manter os fixos, precisamos identificá-los. Vou fazer simples:
-    // Vamos substituir todo o conteúdo do container pelos links fixos + os dinâmicos.
-    // Mas para não perder os links fixos que você já tem no HTML, vamos pegar os que estão lá e reutilizá-los.
 
-    // Coleta os links fixos que estão atualmente no container (excluindo os que serão adicionados dinamicamente)
+    // Coleta os links fixos que estão atualmente no container
     const existingLinks = Array.from(navContainer.querySelectorAll('a:not(.dynamic-link)'));
     let fixedLinksHtml = '';
+    
     existingLinks.forEach(link => {
+        // NOVA REGRA: Se o usuário NÃO estiver logado e o link for o de "Decks", ele pula e não renderiza
+        if (!user && link.href.includes('decks.html')) {
+            return; 
+        }
+        
         fixedLinksHtml += `<a class="${link.className}" href="${link.href}">${link.innerHTML}</a>`;
     });
 
@@ -129,6 +128,7 @@ function atualizarNavbar() {
             dynamicHtml += `<a class="nav-link dynamic-link" href="admin.html">Admin</a>`;
         }
     } else {
+        // Deslogado: exibe botão de Entrar / Cadastrar
         dynamicHtml = `<a class="nav-link dynamic-link" href="contas.html">Entrar / Cadastrar</a>`;
     }
 
