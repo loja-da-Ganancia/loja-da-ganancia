@@ -103,17 +103,18 @@ function atualizarNavbar() {
     if (!navContainer) return;
 
     const user = getCurrentUser();
+    // Limpa os links que não são fixos – mas mantém os links fixos se você quiser preservar
+    // Para evitar remover links fixos, vamos apenas adicionar os nossos no final.
+    // Porém, é mais fácil remover todos e recriar com os fixos + os dinâmicos.
+    // Vamos supor que os links fixos são aqueles que não dependem de login.
+    // Se você quiser manter os fixos, precisamos identificá-los. Vou fazer simples:
+    // Vamos substituir todo o conteúdo do container pelos links fixos + os dinâmicos.
+    // Mas para não perder os links fixos que você já tem no HTML, vamos pegar os que estão lá e reutilizá-los.
 
-    // Coleta os links fixos que estão atualmente no container
+    // Coleta os links fixos que estão atualmente no container (excluindo os que serão adicionados dinamicamente)
     const existingLinks = Array.from(navContainer.querySelectorAll('a:not(.dynamic-link)'));
     let fixedLinksHtml = '';
-    
     existingLinks.forEach(link => {
-        // NOVA REGRA: Se o usuário NÃO estiver logado e o link for o de "Decks", ele pula e não renderiza
-        if (!user && link.href.includes('decks.html')) {
-            return; 
-        }
-        
         fixedLinksHtml += `<a class="${link.className}" href="${link.href}">${link.innerHTML}</a>`;
     });
 
@@ -128,8 +129,7 @@ function atualizarNavbar() {
             dynamicHtml += `<a class="nav-link dynamic-link" href="admin.html">Admin</a>`;
         }
     } else {
-        // Deslogado: exibe botão de Entrar / Cadastrar
-        dynamicHtml = `<a class="nav-link dynamic-link" href="contas.html">Entrar / Cadastrar</a>`;
+    dynamicHtml = `<a class="nav-link dynamic-link" href="contas.html">Entrar / Cadastrar</a>`;
     }
 
     navContainer.innerHTML = fixedLinksHtml + dynamicHtml;
@@ -144,3 +144,53 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarUsuarios();
     atualizarNavbar();
 });
+function gerarToken() {
+    return Math.random().toString(36).substring(2) + Date.now();
+} function solicitarReset(username) {
+    const users = getUsers();
+    const user = users.find(u => u.username === username);
+
+    if (!user) {
+        return { success: false, message: 'Usuário não encontrado.' };
+    }
+
+    const token = gerarToken();
+
+    // salva token no usuário
+    user.resetToken = token;
+    user.resetExpira = Date.now() + (10 * 60 * 1000); // 10 minutos
+
+    saveUsers(users);
+
+    // simulação de email
+    const link = `${window.location.origin}/loja-da-ganancia/reset.html?token=${token}`;
+
+    return {
+        success: true,
+        message: 'Link gerado com sucesso!',
+        link: link
+    };
+}
+function redefinirSenhaComToken(token, novaSenha) {
+    const users = getUsers();
+
+    const user = users.find(u => u.resetToken === token);
+
+    if (!user) {
+        return { success: false, message: 'Token inválido.' };
+    }
+
+    if (Date.now() > user.resetExpira) {
+        return { success: false, message: 'Token expirado.' };
+    }
+
+    user.password = novaSenha;
+
+    // limpa token
+    delete user.resetToken;
+    delete user.resetExpira;
+
+    saveUsers(users);
+
+    return { success: true, message: 'Senha redefinida com sucesso!' };
+}
